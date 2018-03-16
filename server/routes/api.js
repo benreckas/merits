@@ -12,19 +12,20 @@ router.get('/', (req, res) => {
 });
 
 //New Register
-router.post('/app-register', (req, res, next) => {
+router.post('/app-register', (req, res, err, next) => {
 
     let newUser = new User ({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password,
+        confirmPassword: req.body.confirmPassword,
         city: req.body.city,
         state: req.body.state,
     });
-        //console.log('req.body', req.body)
+        console.log('req.body', req.body)
 
-    User.addUser(newUser, (err, user) => {
+    User.addUser(newUser, (req, res, err, user) => {
         if(err) {
             res.json({success: false, msg:
                 'Failed to register user'});
@@ -67,7 +68,7 @@ router.post('/app-authenticate', (req, res, next) => {
     });
 });
 
-//Profile 
+//Profile
 router.get('/app-profile',  passport.authenticate('jwt', {session:false}), (req, res, next) => {
     res.json({user: req.user});
 });
@@ -76,7 +77,7 @@ router.get('/app-profile',  passport.authenticate('jwt', {session:false}), (req,
 
 router.post('/app-search-results', (req, res, next) => {
     const location = req.body.location;
-    const title = req.body.title; 
+    const title = req.body.title;
     const company = req.body.company;
     const skills = req.body.skills;
     const language = req.body.language;
@@ -152,7 +153,7 @@ router.post('/app-search-results', (req, res, next) => {
                     location: user.location,
                     title: user.title,
                 }
-            
+
             });
 
         } else {

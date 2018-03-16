@@ -8,7 +8,11 @@ import { Router } from '@angular/router';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
+
 export class RegisterComponent implements OnInit {
+
+  // Properties
+
   firstName: String;
   lastName: String;
   email: String;
@@ -16,14 +20,13 @@ export class RegisterComponent implements OnInit {
   city: String;
   state: String;
   confirmPassword: String;
-  
-  constructor(
+
+  // Methods
+  constructor (
     private validateService: ValidateService,
     private authService: AuthService,
-  private router: Router) 
-    {
-
-    }
+    private router: Router
+    ) { }
 
 
   ngOnInit() {
@@ -35,25 +38,27 @@ export class RegisterComponent implements OnInit {
       lastName: this.lastName,
       email: this.email,
       password: this.password,
+      confirmPassword: this.confirmPassword,
       city: this.city,
       state: this.state
     };
-    
-  if (!this.validateService.validateRegister(user)) {
-    console.log('Please fill in all fields');
-  }
 
-  if (!this.validateService.validateEmail(user.email)) {
-    console.log('Please enter a valid email');
-    return false;
-  }
-  
-  this.authService.registerUser(user).subscribe(data => {
-    if(data === true) {
-      console.log('You are now registered!');
-      this.router.navigate(['/app-profile']);
-    } else {
+    if (this.validateService.validateRegister(user)) {
+      console.log('Please fill in all fields');
+    }
+
+    if (!this.validateService.validateEmail(user.email)) {
+      console.log('Please enter a valid email');
+      return false;
+    }
+
+    this.authService.registerUser(user).subscribe(data => {
+      if (data === true) {
+        console.log('You are now registered!');
+        this.router.navigate(['/app-profile']);
+      } else {
         console.log('Something went wrong!');
       }
-  });
+    });
+  }
 }
